@@ -1,0 +1,20 @@
+body {
+  display: grid;
+  text-align: center;
+}
+div {
+  justify-content: center;
+  margin: 10px;
+  grid-column: 2/2;
+}
+h1 {
+  grid-row: 1/2;
+}
+h5 {
+  text-align: center;
+  grid-row: 3/3;
+}
+.blank {
+  padding: 20px;
+  margin: 20px;
+}

@@ -35,7 +35,7 @@ var questions = [
     correct: 'None of the above, theyre all trash',
   },
   { id: 7,
-    question: 'Nightcrawlers real name is:',
+    question: "Nightcrawler's real name is:",
     answers: ['Azazel', 'Baron Mordo', 'Kurt Wagner', 'Alan Cumming', 'Nightcrawler'],
     correct: 'Kurt Wagner',
   },
@@ -45,7 +45,7 @@ var questions = [
     correct: 'Rogue',
   },
   { id: 9,
-    question: 'Deadpools first appearance occured in which comic title?',
+    question: "Deadpool's first appearance occured in which comic title?",
     answers: ['X-Factor', 'Deadpool', 'Assassins 4 Hire', 'Cable', 'The Astonishing Spider-Man'],
     correct: 'Cable',
   },
@@ -56,29 +56,97 @@ questions.forEach(question => {
   $('.triviaBox').append(`
     <div class="row col-lg-12">
       <h5 class="question">${question.question}</h5>
-      </div>           
-      <button type="button" class="btn btn-outline-info" id="${question.id}"><span>${question.answers[0]}</span></button>
-      <button type="button" class="btn btn-outline-info" id="${question.id}"><span>${question.answers[1]}</span></button>
-      <button type="button" class="btn btn-outline-info" id="${question.id}"><span>${question.answers[2]}</span></button>
-      <button type="button" class="btn btn-outline-info" id="${question.id}"><span>${question.answers[3]}</span></button>
-      <button type="button" class="btn btn-outline-info" id="${question.id}"><span>${question.answers[4]}</span></button>
-      <p class="answer-${question.id}" style=""display: none">${question.correct}</p>
+      </div>                 
+      <div class="data-toggle="buttons">
+      <p>
+      <label class="btn btn-secondary">
+        <input type="radio" name="question-${question.id}" id="${question.id}" class="choice" autocomplete="off" data-choice="${question.answers[0]}"><span>${question.answers[0]}</span>
+      </label>
+      </p>
+      <p>
+      <label class="btn btn-secondary">
+        <input type="radio" name="question-${question.id}" id="${question.id}" class="choice" autocomplete="off" data-choice="${question.answers[1]}"><span>${question.answers[1]}</span>
+      </label>
+      </p>
+      <p>
+      <label class="btn btn-secondary">
+        <input type="radio" name="question-${question.id}" id="${question.id}" class="choice" autocomplete="off" data-choice="${question.answers[2]}"><span>${question.answers[2]}</span>
+      </label>
+      </p>
+      <p>
+      <label class="btn btn-secondary">
+        <input type="radio" name="question-${question.id}" id="${question.id}" class="choice" autocomplete="off" data-choice="${question.answers[3]}"><span>${question.answers[3]}</span>
+      </label>
+      </p>
+      <p>
+      <label class="btn btn-secondary">
+        <input type="radio" name="question-${question.id}" id="${question.id}" class="choice" autocomplete="off" data-choice="${question.answers[4]}"><span>${question.answers[4]}</span>
+      </label>
+      </p>
+    </div>
+    <p class="answer-${question.id}" style="visibility: hidden">${question.correct}</p>
       `)
     })
 
-$(document).on('click', '.btn', function () {
-  var choice = ($(this).attr('id'));
-  console.log($(this).attr('id'));
-  count = 0
-  for (let i = 0; i < questions.length; i++) {
-    $(`.answer-${i}`).css('display', 'visible')
-    if (choice === questions[i].correct) {
-      count++
+    var qChoice0
+    var qChoice1
+    var qChoice2
+    var qChoice3
+    var qChoice4
+    var qChoice5
+    var qChoice6
+    var qChoice7
+    var qChoice8
+    var qChoice9
+
+  $(document).on('click', '.choice', function () {
+    let temp = $(this).attr('name').split('-')
+    let qID = temp[1]
+    window[`qChoice${qID}`] = $(this).attr('data-choice')
+
+  })
+
+  $('.submit-answers').on('click', function () {
+  finishGame()
+  })
+  function finishGame () {
+    clearInterval(gameTimer)
+    count = 0
+    for (let i = 0; i < questions.length; i++) {
+      $(`.answer-${i}`).css('visibility', 'visible')
+      if (window[`qChoice${i}`] === questions[i].correct) {
+        count++
+      }  
+    }
+    if (count === 10) {
+      alert ('Well done!')
+    } else {
+      alert ('Try again!')
     }
   }
-  if (count === 10) {
-    alert('Great Job!')
-  } else {
-    alert('Keep trying!')
+function timeConversion(t) {
+  var minutes = Math.floor(t / 60)
+  var seconds = t - (minutes * 60)
+  if (seconds < 10) {
+    seconds = '0' + seconds
   }
-})
+  if (minutes === 0) {
+    minutes = '00'
+  }
+  else if (minutes < 10) {
+    minutes = '0' + minutes
+  }
+  return minutes + ":" + seconds
+}
+
+let time = 120
+$('.time').text('02:00')
+  let gameTimer = setInterval(function () {
+    time--
+    if (time > 0) {
+    $('.time').text(timeConversion(time))
+    } else {
+      $('.time').text('00:00')
+    finishGame()
+    }
+  }, 1000)
